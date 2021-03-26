@@ -4,14 +4,18 @@
   "description": "Alias package manager for supibot",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "keywords": [
     "twitch"
   ],
   "author": "Quinn T",
   "license": "ISC",
-  "dependencies": {
-    "supi-core": "git+https://github.com/supinic/supi-core.git"
+  "dependencies": {},
+  "devDependencies": {
+    "supi-core": "github:supinic/supi-core",
+    "typescript": "^4.2.3"
   }
 }
