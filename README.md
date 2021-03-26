@@ -9,3 +9,7 @@ going to make this in JavaScript then add it to a pastebin and use
 `pastebin get <paste id>` although this has a max character ammount 
 of 50,000 I think it will work (much better than using the `$math` 
 command)
+
+
+#### TODO
+- [ ] Fix Publish Workflow, it works but doesnt know that it works.
