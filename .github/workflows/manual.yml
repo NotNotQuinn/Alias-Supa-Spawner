@@ -6,23 +6,6 @@ name: Manual Publish
 # or API.
 on:
   workflow_dispatch:
-    # Inputs the workflow accepts.
-    inputs:
-      username:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'Username of account to publish under.'
-        # Input has to be provided for the workflow to run
-        required: true
-      oauth:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'Oauth token of account to publish under.'
-        # Input has to be provided for the workflow to run
-        required: true
-
-
-
-
-
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -45,7 +28,7 @@ jobs:
     - run: npm run build --if-present
     # Runs a single command using the runners shell
     - name: Do publish
-      run: npm run post -- --username "${{ github.event.inputs.username }}" --oauth "${{ github.event.inputs.oauth }}" --real
+      run: npm run post -- --username "${{ secrets.BOT_TWITCH_USERNAME }}" --oauth "${{ secrets.BOT_TWITCH_OAUTH_TOKEN }}" --real
       
       
       
