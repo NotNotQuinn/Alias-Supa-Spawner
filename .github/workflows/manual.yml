@@ -45,7 +45,7 @@ jobs:
     - run: npm run build --if-present
     # Runs a single command using the runners shell
     - name: Do publish
-      run: npm run post --username "${{ github.event.inputs.username }}" --oauth "${{ github.event.inputs.oauth }}" --real
+      run: npm run post -- --username "${{ github.event.inputs.username }}" --oauth "${{ github.event.inputs.oauth }}" --real
       
       
       
