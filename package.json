@@ -1,12 +1,14 @@
 {
-  "name": "sb-ts-apm",
+  "name": "sb-apm",
   "version": "0.0.1",
   "description": "Alias package manager for supibot",
   "main": "lib/index.js",
+  "repository": "https://github.com/NotNotQuinn/sb-apm",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "post": "node ./post-to-bot"
   },
   "keywords": [
     "twitch"
@@ -15,7 +17,10 @@
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
+    "@types/yargs": "^16.0.1",
+    "dank-twitch-irc": "^4.3.0",
     "supi-core": "github:supinic/supi-core",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.3",
+    "yargs": "^16.2.0"
   }
 }
