@@ -92,7 +92,7 @@ const dankTwitch = require("dank-twitch-irc");
     console.log(`bot-username: '${opts["bot-username"]}'`)
     console.log(`bot-prefix: '${opts["bot-prefix"]}'`)
     console.log(`username: '${opts.username}'`)
-    console.log(`oauth: '${opts.oauth.slice(0, 3) + '*'.repeat(opts.oauth.slice(3, -1).length)}'`)
+    console.log(`oauth: '*'.repeat(opts.oauth.length)}'`)
   }
 })(argv.argv)
 .catch((e)=>{
