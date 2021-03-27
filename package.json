@@ -14,11 +14,12 @@
     "twitch"
   ],
   "author": "Quinn T",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {},
   "devDependencies": {
     "@types/yargs": "^16.0.1",
     "dank-twitch-irc": "^4.3.0",
+    "minify-all-js": "^0.1.7",
     "supi-core": "github:supinic/supi-core",
     "typescript": "^4.2.3",
     "yargs": "^16.2.0"
