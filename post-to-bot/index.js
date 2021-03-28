@@ -6,13 +6,25 @@ const argv = yargs
   .option("username", {
     type: "string",
     alias: "u",
-    desc: "Username of account to upload as.",
+    desc: "Username of twitch account to post as.",
     demand: true
   })
   .option("oauth", {
     alias: "o",
     type: "string",
-    desc: "Oauth token of account to upload as. (no \"oauth:\")",
+    desc: "Oauth token of account to post as. (no \"oauth:\")",
+    demand: true
+  })
+  .option("pastebin-user-auth", {
+    alias: "a",
+    type: "string",
+    desc: "Auth key of pastebin user to post under.",
+    demand: true
+  })
+  .option("pastebin-dev-key", {
+    alias: "d",
+    type: "string",
+    desc: "Pastebin developer key.",
     demand: true
   })
   .option("real", {
@@ -39,26 +51,20 @@ const argv = yargs
     desc: "Username of bot to upload on.",
   })
   .option("send-channel", {
-    alias: "c",
+    alias: "channel",
     default: "quinndt",
     type: "string",
     desc: "Twitch channel bot is availible in.",
   })
   .alias("v", "version")
   .alias("h", "help")
+  .alias("c", "send-channel")
   .alias("channel", "send-channel")
-
   .help()
 
 
-/**
- * @returns {string}
- */
-function getPublishCommand() {
-  return 'dankdebug return "FeelsDankMan"'
-}
-
 const dankTwitch = require("dank-twitch-irc");
+const getPublishCommand = require("./get_command");
 
 (async (opts)=>{
   let timeout;
@@ -80,7 +86,7 @@ const dankTwitch = require("dank-twitch-irc");
   if(opts.real) {
     await client.connect()
     await client.join(`${opts["send-channel"]}`)
-    await client.say(opts["send-channel"], `${ opts["bot-prefix"] }${ getPublishCommand() }`)
+    await client.say(opts["send-channel"], `${ opts["bot-prefix"] }${ await getPublishCommand(opts["pastebin-user-auth"], opts["pastebin-dev-key"]) }`)
     timeout = setTimeout(()=>{
       let err = new Error(`Error: no successful responce after ${opts.timeout} ms`)
       throw err;
@@ -92,7 +98,7 @@ const dankTwitch = require("dank-twitch-irc");
     console.log(`bot-username: '${opts["bot-username"]}'`)
     console.log(`bot-prefix: '${opts["bot-prefix"]}'`)
     console.log(`username: '${opts.username}'`)
-    console.log(`oauth: '*'.repeat(opts.oauth.length)}'`)
+    console.log(`oauth: ${'*'.repeat(opts.oauth.length)}`)
   }
 })(argv.argv)
 .catch((e)=>{

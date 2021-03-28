@@ -1,16 +1,24 @@
-const querystring = require('querystring');
+const qs = require('querystring');
 const https = require('https');
-const fs = require('fs');
-
+const path = require('path');
+const fs = require('fs').promises;
 
 /**
  * 
  * @param {string} filepath Path of file to minify.
+ * @returns {Promise<string>} Path of minified file
  */
-function minify(filepath) {
+async function minify(filepath) {
 
-    const query = querystring.stringify({
-        input : fs.readFileSync(filepath).toString(),
+    let chunks_of_data = [];
+    let source = path.parse(filepath);
+    let out_path = path.format({
+        name: source.name + ".min",
+        ext: source.ext,
+        dir: source.dir
+    });
+    const query = qs.stringify({
+        input : (await fs.readFile(filepath)).toString(),
     });
 
     const req = https.request(
@@ -25,7 +33,15 @@ function minify(filepath) {
                 console.log('StatusCode=' + resp.statusCode);
                 return;
             }
-            resp.pipe(process.stdout);
+            resp.on('data', (fragment) => {
+                chunks_of_data.push(fragment);
+            })
+            resp.on('end', () => {
+                let minified = Buffer.concat(chunks_of_data);
+                fs.writeFile(out_path, minified).catch((err)=>{
+                    throw err;
+                });
+            });
         }
     );
 
@@ -36,23 +52,26 @@ function minify(filepath) {
     req.setHeader('Content-Type', 'application/x-www-form-urlencoded');
     req.setHeader('Content-Length', query.length);
     req.end(query, 'utf8');
+    return out_path;
 }
 module.exports = minify;
 
 if (require.main === module) {
-    const yargs = require("yargs");
+    (async()=>{
+        const yargs = require("yargs");
 
-    let argv = yargs
-        .option("file", {
-            type:"string",
-            desc: "File to minify",
-            demand: true
-        })
-        .alias("f", "file")
-        .alias("h", "help")
-        .alias("v", "version")
-        .help()
-        .argv
-
-    minify(argv.file);
+        let argv = yargs
+            .option("file", {
+                type:"string",
+                desc: "File to minify",
+                demand: true
+            })
+            .alias("f", "file")
+            .alias("h", "help")
+            .alias("v", "version")
+            .help()
+            .argv
+        let path = await minify(argv.file);
+        console.log("writing minified file to " + path);
+    })();
 }

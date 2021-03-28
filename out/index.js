@@ -7,10 +7,10 @@
     var channel = "3_CHANNEL daa4ab12";
     var args = usage.split(" ");
     if (args.length == 0) {
-        throw new ArgumentError("Please provide some arguments, use 'help' for help.");
+        throw new Error("Please provide some arguments, use 'help' for help.");
     }
     switch (args[0]) {
         case "help":
-            return;
+            return 'No help info LULW';
     }
 })();
