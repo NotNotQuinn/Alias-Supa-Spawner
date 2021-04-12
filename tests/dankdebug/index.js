@@ -10,39 +10,21 @@ module.exports = {
 		{ name: "function", type: "string" }
 	],
 	Whitelist_Response: null,
-	Static_Data: (() => ({
-		allowedUtilsMethods: [
-			"capitalize",
-			"randArray",
-			"random",
-			"randomString",
-			"removeAccents",
-			"timeDelta",
-			"wrapString",
-			"zf"
-		]
-	})),
+	Static_Data: null,
 	Code: (async function dankDebug (context, ...args) {
+		this.staticData = (() => ({
+			allowedUtilsMethods: [
+				"capitalize",
+				"randArray",
+				"random",
+				"randomString",
+				"removeAccents",
+				"timeDelta",
+				"wrapString",
+				"zf"
+			]
+		}))();
 		let scriptArgs;
-		if (context.params.arguments) {
-			if (context.params.function) {
-				return {
-					success: false,
-					reply: `Cannot combine arguments and function params together!`
-				};
-			}
-			
-			try {
-				scriptArgs = JSON.parse(context.params.arguments);
-			}
-			catch (e) {
-				return {
-					success: false,
-					reply: `Command arguments cannot be parsed! ${e.message}`
-				};
-			}
-		}
-
 		let result;
 		let script;
 		if (context.params.function) {
@@ -88,7 +70,7 @@ module.exports = {
 		if (result && typeof result === "object") {
 			try {
 				return {
-					reply: "Result: " + require("util").inspect(result)
+					reply: require("util").inspect(result)
 				};
 			}
 			catch (e) {
@@ -101,7 +83,7 @@ module.exports = {
 		}
 		else {
 			return {
-				reply: `Result: ${result}`
+				reply: `${result}`
 			};
 		}
 	}),
