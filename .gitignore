@@ -1,2 +1,5 @@
 # node
 node_modules
+
+# api keys
+paste_api.js
