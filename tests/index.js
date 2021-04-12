@@ -38,7 +38,7 @@
             .replace(/\s+/g, " ")
             // remove newlines.
             .replace(/\r\n|\r|\n/g, "")
-        let pasteText = `dankdebug function:"${script}"`
+        let pasteText = `function:"${script}"`
         await fs.writeFile("./out/script.js", script)
         await fs.writeFile("./out/paste.txt", pasteText)
         
@@ -50,9 +50,9 @@
         if( script.includes('"') ) console.error( new Error(`Script cannot contain double quotes (\").`))
         if( script.includes('|') ) console.error( new Error(`Script cannot contain pipe ('|').`))
         if( script.includes('>') ) console.error( new Error(`Script cannot contain greater than ('>').`))
-        if( pasteText.length > 50_000 ) { console.error( new Error( `Script length is above 50 000 (${ script.length }).` ))} else
-        if( pasteText.length > 40_000 ) { console.warn( new Error( `Script length aproaching 40 000 (${ script.length }).` ))} else
-        console.log(`Length of script: ${pasteText.length}`);
+        if( pasteText.length > 50_000 ) { console.error( new Error( `Paste length is above 50 000 (${ script.length }).` ))} else
+        if( pasteText.length > 40_000 ) { console.warn( new Error( `Paste length aproaching 40 000 (${ script.length }).` ))} else
+        console.log(`Length of paste: ${pasteText.length}`);
     }
 })();
 
