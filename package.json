@@ -21,7 +21,7 @@
     "@types/node": "^14.14.37",
     "@types/yargs": "^16.0.1",
     "dank-twitch-irc": "^4.3.0",
-    "pastebin-ts": "^1.2.0",
+    "prompt-sync": "^4.2.0",
     "supi-core": "github:supinic/supi-core",
     "typescript": "^4.2.3",
     "yargs": "^16.2.0"
