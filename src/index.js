@@ -2,20 +2,7 @@
     const invoc = '$$ dam';
     if (args[0] === undefined) return `abb ac 0 a em:\u{22}Please provide a subcommand: try '${invoc} help'.\u{22}`;
 
-    /**
-     * @typedef SubCommandReturnType The object a subcommands code returns.
-     * @property {string} [reply] The text to display to the user
-     * @property {boolean} [success] Whether the subcommand succeeded or not.
-     * @property {boolean} [command] A command to send to supibot, if used, reply and success are ignored.
-     */
 
-    /**
-     * @typedef SubCommand A subcommand of the dam command.
-     * @property { string } name The main name of the subcommand.
-     * @property { Array<string> } aliases A list of aliases to invoke the subcommand with.
-     * @property { () => SubCommandReturnType } code The implementation of the subcommand.
-     * @property { string | null } help A short help message, should be less than 100 characters.
-     */
 
     /** 
      * @type {[x:  SubCommand]} */
@@ -75,17 +62,4 @@
     return (function(){
         
     }());
-/*
-    switch (args[0]) {
-        case 'i':
-        case 'install':
-
-        case 'help':
-
-        case undefined:
-            return `abb ac 0 a em:\u{22}Please provide a subcommand: try '${invoc} help.\u{22}`;
-        default:
-            return `abb ac 0 a em:\u{22}Unrecognised subcommand, try '${invoc} help'.\u{22}`;
-    }
-*/
 })();
