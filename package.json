@@ -1,8 +1,8 @@
 {
   "name": "sb-apm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Alias package manager for supibot",
-  "main": "lib/index.js",
+  "main": "index.js",
   "repository": "https://github.com/NotNotQuinn/sb-apm",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,18 +13,16 @@
     "post": "node ./post-to-bot"
   },
   "keywords": [
-    "twitch"
+    "twitch",
+    "supibot"
   ],
   "author": "Quinn T",
   "license": "MIT",
   "dependencies": {
     "@types/node": "^14.14.37",
     "@types/yargs": "^16.0.1",
-    "dank-twitch-irc": "^4.3.0",
     "loadavg-windows": "^1.1.1",
     "prompt-sync": "^4.2.0",
     "supi-core": "github:NotNotQuinn/supi-core#custom",
-    "typescript": "^4.2.3",
-    "yargs": "^16.2.0"
   }
 }
