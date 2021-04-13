@@ -23,7 +23,7 @@
     "dank-twitch-irc": "^4.3.0",
     "loadavg-windows": "^1.1.1",
     "prompt-sync": "^4.2.0",
-    "supi-core": "github:NotNotQuinn/supi-core",
+    "supi-core": "github:NotNotQuinn/supi-core#custom",
     "typescript": "^4.2.3",
     "yargs": "^16.2.0"
   }
