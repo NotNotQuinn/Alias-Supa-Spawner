@@ -3,3 +3,6 @@ node_modules
 
 # api keys
 paste_api.js
+
+# supibot database connection (for supi-core)
+supibot-db-access.js

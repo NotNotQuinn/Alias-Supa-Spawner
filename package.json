@@ -17,12 +17,13 @@
   ],
   "author": "Quinn T",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "@types/node": "^14.14.37",
     "@types/yargs": "^16.0.1",
     "dank-twitch-irc": "^4.3.0",
+    "loadavg-windows": "^1.1.1",
     "prompt-sync": "^4.2.0",
-    "supi-core": "github:supinic/supi-core",
+    "supi-core": "github:NotNotQuinn/supi-core",
     "typescript": "^4.2.3",
     "yargs": "^16.2.0"
   }
