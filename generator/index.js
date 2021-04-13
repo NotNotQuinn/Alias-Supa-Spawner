@@ -1,11 +1,15 @@
+const fs = require("fs").promises;
+const dankdebug = require("./dankdebug");
+const Prompt = require("prompt-sync");
 
-(async()=>{
-    const fs = require("fs").promises;
-    const dankdebug = require("./dankdebug");
-    const Prompt = require("prompt-sync");
 
+/**
+ * 
+ * @param {string} configPath Configuration
+ */
+const aliasGenerator = (async(configPath)=>{
     /** @type {Config} */
-    const config = eval( '(()=>(' +((await fs.readFile("./generator/config.jsonc")).toString())+ '))()' )
+    const config = eval( '(()=>(' +((await fs.readFile(configPath)).toString())+ '))()' )
 
     if (config.mode === "database") {
         // this is used inside supi-core for some weird database magic.
@@ -63,13 +67,20 @@
         
         let result = await dankdebug.Code({ params: { function: script } }, ...args);
         result.success = result.success ?? true
+        
         console.log(result)
 
-        if( script.includes('"') ) console.error( new Error(`Script cannot contain double quotes (\").`))
-        if( script.includes('|') ) console.error( new Error(`Script cannot contain pipe ('|').`))
-        if( script.includes('>') ) console.error( new Error(`Script cannot contain greater than ('>').`))
+        for (let char of config.badCharacters) {
+            if( script.includes(char) ) console.error( new Error(`Script cannot contain this character. "${char}"`))
+        }
+        
         if( pasteText.length > 50_000 ) { console.error( new Error( `Paste length is above 50 000 (${ script.length }).` ))} else
         if( pasteText.length > 40_000 ) { console.warn( new Error( `Paste length aproaching 40 000 (${ script.length }).` ))} else
         console.log(`Length of paste: ${pasteText.length}`);
     }
-})();
+});
+module.exports = aliasGenerator;
+
+if (require.main === module) {
+    aliasGenerator("./generator/config.jsonc")
+}
