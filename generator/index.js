@@ -1,22 +1,40 @@
 
 (async()=>{
-    await require("supi-core")("sb", {
-        whitelist: [
-            "objects/date",
-            "singletons/sandbox",
-            "singletons/utils"
-        ]
-    })
     const fs = require("fs").promises;
     const dankdebug = require("./dankdebug");
-    const Prompt = require("prompt-sync")
+    const Prompt = require("prompt-sync");
+
+    /** @type {Config} */
+    const config = eval( '(()=>(' +((await fs.readFile("./generator/config.jsonc")).toString())+ '))()' )
+
+    if (config.mode === "database") {
+        // this is used inside supi-core for some weird database magic.
+        process.env.PROJECT_TYPE = "bot"
+
+        // Set proccess.env to hold configs
+        await require("../supibot-db-access")
+        // load all supi-core modules
+        await require("supi-core")();
+    } else if (config.mode === "basic") {
+        await require("supi-core")("sb", {
+            whitelist: [
+                "objects/date",
+                "singletons/sandbox",
+                "singletons/utils",
+                "classes/command"
+            ],
+            skipData: [
+                "classes/command"
+            ]
+        })
+    }
 
     let prompt = Prompt({
         sigint: true
     });
 
 
-    while(!0) {
+    while(true) {
 
         let args = [];
         let _args = prompt("$$ dam ")
@@ -35,7 +53,7 @@
             // Remove multiline comments
             .replace(/(\/\*)([\s\S]*?)?(\*\/)/g, "")
             // Turn whitespace into 1 space
-            .replace(/\s+/g, " ")
+            .replace(/(\t|\s)+/g, " ")
             // remove newlines.
             .replace(/\r\n|\r|\n/g, "")
         let pasteText = `function:"${script}"`
@@ -55,9 +73,3 @@
         console.log(`Length of paste: ${pasteText.length}`);
     }
 })();
-
-
-
-
-
-
