@@ -4,15 +4,27 @@ module.exports = {
 	Author: "supinic",
 	Cooldown: 10000,
 	Description: "Debug command for public use, which means it's quite limited because of security.",
-	Flags: ["developer","pipe","use-params"],
+	Flags: ["developer","mention","pipe","use-params"],
 	Params: [
 		{ name: "arguments", type: "string" },
 		{ name: "function", type: "string" }
 	],
 	Whitelist_Response: null,
-	Static_Data: null,
+	Static_Data: (() => ({
+		allowedUtilsMethods: [
+			"capitalize",
+			"randArray",
+			"random",
+			"randomString",
+			"removeAccents",
+			"timeDelta",
+			"wrapString",
+			"zf"
+		]
+	})),
 	Code: (async function dankDebug (context, ...args) {
-		this.staticData = (() => ({
+/********************************************************/
+		this.staticData = Object.freeze({
 			allowedUtilsMethods: [
 				"capitalize",
 				"randArray",
@@ -23,8 +35,28 @@ module.exports = {
 				"wrapString",
 				"zf"
 			]
-		}))();
+		})
+/*******************************************************/
 		let scriptArgs;
+		if (context.params.arguments) {
+			if (context.params.function) {
+				return {
+					success: false,
+					reply: `Cannot combine arguments and function params together!`
+				};
+			}
+			
+			try {
+				scriptArgs = JSON.parse(context.params.arguments);
+			}
+			catch (e) {
+				return {
+					success: false,
+					reply: `Command arguments cannot be parsed! ${e.message}`
+				};
+			}
+		}
+
 		let result;
 		let script;
 		if (context.params.function) {
@@ -32,7 +64,7 @@ module.exports = {
 			scriptArgs = args;
 		}
 		else {
-			script = `(() => {\n${args.join(" ")}\n})()`;
+			script = `(() => {\n${args.join(" ")}\n})()`;			
 		}
 		
 		try {
@@ -83,7 +115,7 @@ module.exports = {
 		}
 		else {
 			return {
-				reply: `${result}`
+				reply: String(result)
 			};
 		}
 	}),
