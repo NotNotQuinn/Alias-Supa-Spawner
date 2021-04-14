@@ -23,6 +23,6 @@
     "@types/yargs": "^16.0.1",
     "loadavg-windows": "^1.1.1",
     "prompt-sync": "^4.2.0",
-    "supi-core": "github:NotNotQuinn/supi-core#custom",
+    "supi-core": "github:NotNotQuinn/supi-core#custom"
   }
 }

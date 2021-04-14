@@ -8,7 +8,7 @@
     // if "basic"
         // only load `date`, `sandbox`, and `utils` modules
         // Required for the dankdebug command.
-    "mode": "basic", // "basic" | "database"
+    "mode": "database", // "basic" | "database"
 
     "pasteOptions": {
         "write": true,
@@ -42,7 +42,6 @@
             "\"", // AKA "\u{22}"
 
         // If you want your code to be able to go through pipe and NOT get fucked
-        // this is useful if you want to generate things for supibot to do.
 
             // you cannot use the pipe characters.
             "|", // AKA "\u{7C}"
