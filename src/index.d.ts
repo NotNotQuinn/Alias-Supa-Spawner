@@ -1,9 +1,9 @@
 
-declare const args: Array<string>;
+declare const args: Array<string> | null;
 
 declare type SubCommandReturnType = {
     reply: undefined;
-    success: undefined;
+    success?: boolean;
     command: string;
 } | {
     reply: string;

@@ -2,7 +2,7 @@
   "name": "sb-apm",
   "version": "0.0.2",
   "description": "Alias package manager for supibot",
-  "main": "index.js",
+  "main": "./generator/index.js",
   "repository": "https://github.com/NotNotQuinn/sb-apm",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -23,6 +23,7 @@
     "@types/yargs": "^16.0.1",
     "loadavg-windows": "^1.1.1",
     "prompt-sync": "^4.2.0",
-    "supi-core": "github:NotNotQuinn/supi-core#custom"
+    "supi-core": "github:NotNotQuinn/supi-core#custom",
+    "supibot-package-manager": "github:NotNotQuinn/supibot-package-manager#custom"
   }
 }
