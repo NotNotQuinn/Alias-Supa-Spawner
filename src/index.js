@@ -15,8 +15,9 @@ const octokit = new Octokit({
 
 (async()=>{
     await JSAlias.SBLoadPromise;
-    let a = new JSAlias({
+    let alias = new JSAlias({
         inFile: "./test.sb.js",
+        outFile: "./test.sb.min.js",
         useFunctionParam: true,
         wrapFunction: "function-keyword"
     })
@@ -27,10 +28,11 @@ const octokit = new Octokit({
 
         let args = prompt(`$$${'alias'} `).split(" ");
 
-        await a.load();
-        await a.uglify();
+        await alias.load();
+        await alias.uglify();
+        await alias.write();
 
-        responce = await a.test(args);
+        responce = await alias.test(args);
         if (responce.success === void 0) responce.success = true;
         console.log(responce);
         i++;
