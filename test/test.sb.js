@@ -1,6 +1,8 @@
 "use strict";
 
-const invocation = "alias";
+const invocation = "test";
+
+if (!args) return `Please use this code with the 'function:"code"' syntax.`;
 
 /**
  * @typedef Context
@@ -15,9 +17,22 @@ const invocation = "alias";
  */
 
 /**
+ * @typedef SubCommandExec
+ * @param {Context} context
+ * @returns {SubCommandReturnType}
+ */
+
+/**
+ * The return type of the command.
+ * @typedef SubCommandReturnType
+ * @property {string} reply The text to reply with
+ * @property {string} cmd A supibot command to execute.
+ */
+
+/**
  * @typedef SubCommand
  * @property {string[]} Names List of names the sub-command has.
- * @property {(context: Context) => string} Exec Execution of the command.
+ * @property {SubCommandExec} Exec Execution of the command.
  * @property {HelpTexts} helpTexts Help messages for the sub-command.
  */
 
@@ -57,11 +72,14 @@ const commands = [
         }
     }
 ]
-let command = commands.find(i => i.Names.includes(args[0]) );
+let error_msg = `Sub-command "${args[0]}}" not found.`
+if (args[0] === void 0) error_msg = `No sub-command provided.`
 
-if (!command) return `Sub-command "${invocation}" not found. Try: ${ commands.map(cmd => cmd.Names[0]).join(", ") }; OR: "$$${invocation} help (sub-command) for more information."`;
+let command = commands.find(i => i.Names.includes(args[0]));
 
-if (Math.random() > .5) return 'loool trolled'
+if (!command) return `${error_msg} Try: ${ commands.map(cmd => cmd.Names[0]).join(", ") }; OR: "$$${invocation} help (sub-command)" for more information.`;
+
+if ((Math.floor(Math.random() * 5)) > 5) return 'loool trolled'
 return command.Exec({
     Invocation: args[0],
     Args: args.slice(1)
