@@ -16,8 +16,8 @@ const octokit = new Octokit({
 (async()=>{
     await JSAlias.SBLoadPromise;
     let alias = new JSAlias({
-        inFile: "./test.sb.js",
-        outFile: "./test.sb.min.js",
+        inFile: "./test/test.sb.js",
+        outFile: "./test/test.sb.min.js",
         useFunctionParam: true,
         wrapFunction: "function-keyword"
     })
