@@ -97,7 +97,7 @@ class JSAlias {
     }
 
     /**
-     * Loads the file into memory, and serializes.
+     * Loads the file into memory.
      */
     async load() {
         this.rawCodeBuffer = await fs.readFile(this.inFile);
@@ -115,15 +115,15 @@ class JSAlias {
         let responce = UglifyJS.minify(this.preUglyCode, Object.assign({
             output: {
                 quote_style: 1,
-                preamble: "/*! Created using 'Alias Supa Spawner', Powered by UglifyJS */"
+                preamble: "/*! Created using 'Alias Supa Spawner' (https://github.com/NotNotQuinn/Alias-Supa-Spawner), Powered by UglifyJS */"
             },
             mangle: false,
             compress: false,
             keep_fnames: true
-        }, options))
-        let code = responce.code.replace(/"/g, '\\u{22}')
+        }, options));
+        if( responce.error ) console.log(responce.error);
+        let code = responce.code.replace(/"/g, '\\u{22}');
         this.uglyCode = code;
-        if( responce.error ) console.log(responce.error)
     }
 
     /**
@@ -132,8 +132,7 @@ class JSAlias {
      */
     async test(args) {
         let realArgs = 
-            (
-                this.useFunctionParam
+            (   this.useFunctionParam
                     ? ""
                     : this.code
             ).split(/\r?\n|\s/).concat(args).filter(i => i !== "");
@@ -167,6 +166,10 @@ class JSAlias {
             }
         );
         return r;
+    }
+
+    async write () {
+        await fs.writeFile(this.outFile ?? (()=>{ throw new Error("No outfile found.") })(), this.code)
     }
 }
 module.exports = JSAlias;
