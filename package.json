@@ -2,7 +2,7 @@
   "name": "sb-apm",
   "version": "0.0.2",
   "description": "Alias package manager for supibot",
-  "main": "./generator/index.js",
+  "main": "./src/index.js",
   "repository": "https://github.com/NotNotQuinn/sb-apm",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
