@@ -1,0 +1,7 @@
+{
+    "inFile": "./test.sb.js",
+    "outFile": "./test.sb.min.js",
+    "wrapFunction": "function-keyword",
+    "gist_id": "362638538abebe804d99796e9aa27832",
+    "authFilePath": "./auth.js"
+}
