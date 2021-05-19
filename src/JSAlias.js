@@ -83,11 +83,15 @@ class JSAlias {
     }
 
     get rawCode () {
-        return this.wrapFunction === "arrow"
-            ? ("(()=>{" + this.rawCodeBuffer.toString() + "})")
-            : this.wrapFunction === "function-keyword"
-                ? ("(function(){\n" + this.rawCodeBuffer.toString() + "\n})")
-                : this.rawCodeBuffer.toString()
+        try {
+            return this.wrapFunction === "arrow"
+                ? ("(()=>{" + this.rawCodeBuffer.toString() + "})")
+                : this.wrapFunction === "function-keyword"
+                    ? ("(function(){\n" + this.rawCodeBuffer.toString() + "\n})")
+                    : this.rawCodeBuffer.toString()
+        } catch {
+            return null
+        }
     }
 
     /** The code in a state RIGHT before it get formatted. */
