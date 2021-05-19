@@ -46,9 +46,15 @@ class JSAlias {
 
     /**
      * Whether to use `function:"code"`. Defaults to `true`.
-     * @type {boolean|"arrow"|"function-keyword"}
+     * @type {boolean}
      */
     useFunctionParam = true;
+
+    /**
+     * What type the wrapper function will be.
+     * @type {"function-keyword"|"arrow"}
+     */
+    wrapFunction = "function-keyword";
 
     /**
      * Raw input code.
@@ -94,7 +100,7 @@ class JSAlias {
         }
     }
 
-    /** The code in a state RIGHT before it get formatted. */
+    /** The code in a state RIGHT before it gets formatted. - Must always be wrapped in a function */
     get preUglyCode () {
         // Always wrap this in a function
         return "const ASS_Entry=" + (this.useFunctionParam ? this.rawCode : `(()=>{${ this.rawCode }})`) + ";ASS_Entry()";
@@ -113,6 +119,7 @@ class JSAlias {
 
     /**
      * Compresses code & turns it into a supibot-useable format (No double quotes).
+     * @param {string|null} [preamble] Line to include at the top of output.
      * @param {UglifyJS.MinifyOptions} [options] Options to overwite defaults.
      */
     async uglify(options = {}) {
@@ -164,7 +171,7 @@ class JSAlias {
                 }),
                 platform: {
                     Name: "fake-chat",
-                    ID: Math.floor(Math.random() * Math.floor(Math.random() * 50)),
+                    ID: 13,
                     Self_Name: "fake-bot"
                 }
             }
