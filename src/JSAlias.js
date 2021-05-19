@@ -122,19 +122,19 @@ class JSAlias {
      * @param {string|null} [preamble] Line to include at the top of output.
      * @param {UglifyJS.MinifyOptions} [options] Options to overwite defaults.
      */
-    async uglify(options = {}) {
+    async uglify(preamble, options = {}) {
         let responce = UglifyJS.minify(this.preUglyCode, Object.assign({
             output: {
                 quote_style: 1,
-                preamble: "/*! Created using 'Alias Supa Spawner' (https://github.com/NotNotQuinn/Alias-Supa-Spawner), Powered by UglifyJS */"
+                preamble: preamble ?? undefined
             },
-            mangle: false,
-            compress: false,
+            mangle: true,
+            compress: true,
             keep_fnames: true
         }, options));
         if( responce.error ) console.log(responce.error);
         let code = responce.code.replace(/"/g, '\\u{22}');
-        this.uglyCode = code;
+        this.uglyCode = `/*! Created using 'Alias Supa Spawner' (https://github.com/NotNotQuinn/Alias-Supa-Spawner), Powered by UglifyJS */\n` + code;
     }
 
     /**
