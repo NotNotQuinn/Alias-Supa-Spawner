@@ -17,16 +17,14 @@ if (!args) return `Please use this code with the 'function:"code"' syntax.`;
  */
 
 /**
- * @typedef SubCommandExec
- * @param {Context} context
- * @returns {SubCommandReturnType}
+ * @typedef {(context: Context) => SubCommandReturnType} SubCommandExec
  */
 
 /**
  * The return type of the command.
  * @typedef SubCommandReturnType
- * @property {string} reply The text to reply with
- * @property {string} cmd A supibot command to execute.
+ * @property {string} [reply] The text to reply with
+ * @property {string} [cmd] A supibot command to execute.
  */
 
 /**
@@ -49,30 +47,36 @@ const commands = [
         Exec: (context) => {
             const { Invocation, Args: [ identifier ] } = context;
             if (identifier === void 0)
-                return `Availible sub-commands: ${ commands.map(cmd => cmd.Names[0]).join(", ") }; Also: try $$${invocation} help help`
+                return {
+                    reply: `Availible sub-commands: ${ commands.map(cmd => cmd.Names[0]).join(", ") }; Also: try $$${invocation} help help`
+                }
 
             let command = commands.find(i => i.Names.includes(identifier));
 
             if (command) {
                 let aliases = command.Names.slice(1).join(", ");
                 return `Help for "${ command.Names[0] }"${ aliases !== "" ? ` (${aliases})` : "" }: `
-                  + `${command.helpTexts.basic}; Usage: $$${invocation} ${ command.Names[0] } ${command.helpTexts.useage}`
+                  + `${command.helpTexts.basic}; Usage: ${command.helpTexts.useage}`
             }
             return `Command not found "${identifier}". Availible sub-commands: ${ commands.map(cmd => cmd.Names[0]).join(", ") }`
         },
         helpTexts: {
             basic: "Shows help for commands, or a list of sub-commands",
-            useage: "(command-name)"
+            useage: `$$${invocation} help (sub-command)`
         }
     },
     {
         Names: ["ping"],
         Exec: (context) => {
             return `Pong! This command is not a stand-alone bot but whatever.`
+        },
+        helpTexts: {
+            basic: "A test command that responds with the same text.",
+            usage: `$$${invocation} ping`
         }
     }
 ]
-let error_msg = `Sub-command "${args[0]}}" not found.`
+let error_msg = `Sub-command "${args[0]}" not found.`
 if (args[0] === void 0) error_msg = `No sub-command provided.`
 
 let command = commands.find(i => i.Names.includes(args[0]));
