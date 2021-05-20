@@ -62,7 +62,8 @@ let wrapper = (async()=>{
         let alias = new JSAlias({
             outFile: options_rel_path(options.outFile),
             inFile: options_rel_path(options.inFile),
-            wrapFunction: options.wrapFunction
+            wrapFunction: options.wrapFunction,
+            useFunctionParam: options.useFunctionParam
         });
 
         /** Loads JS file, compresses, and writes to outfile. */

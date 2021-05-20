@@ -75,7 +75,7 @@ class JSAlias {
      * @param {boolean} [options.useFunctionParam] Whether to use `function:"code"`. Defaults to `true`.
      * @param {"arrow"|"function-keyword"} [options.wrapFunction] Type of function to use as a wrapper.
      */
-    constructor({ inFile, outFile = null, useFunctionParam = true, wrapFunction = "arrow" }) {
+    constructor({ inFile, outFile = null, useFunctionParam = true, wrapFunction = "function-keyword" }) {
         if (!this.loadedSB) throw new Error("Please wait until sb is loaded before instantiating anything.")
 
         if (typeof inFile === "string") this.inFile = inFile;
