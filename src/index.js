@@ -249,7 +249,7 @@ let wrapper = (async()=>{
                             + "  NOTE: If you would like to know more about the command:\n"
                             + "        https://supinic.com/bot/command/183/code \n"
                             + "\n"
-                            + " - Last update 19/05/21 (D/M/Y)\n"
+                            + " - Last update 20/05/21 (D/M/Y)\n"
                     }
                     const entries = Object.entries(help_topics);
                     let res;
