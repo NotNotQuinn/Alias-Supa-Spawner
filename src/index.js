@@ -43,12 +43,21 @@ let wrapper = (async()=>{
         require(options_rel_path(options.authFilePath));
 
         /** Github API object. */
-        const octokit = new Octokit({
+        let octokit;
+        if (process.env.GITHUB_TOKEN) octokit = new Octokit({
             log: console,
-            auth: process.env.GITHUB_TOKEN
-                ?? (()=>{throw new Error(`process.env.GITHUB_TOKEN was not loaded by require-ing '${options_rel_path(options.authFilePath)}'`)}),
+            auth: process.env.GITHUB_TOKEN,
             userAgent: "Gist updating."
         });
+        // no auth;
+        else {
+            console.warn(new Error("Warning: No auth loaded for GitHub API."));
+            octokit = new Octokit({
+                log: console,
+                userAgent: "Gist updating."
+            });
+        }
+
 
         /** Represents the current alias being worked on. */
         let alias = new JSAlias({
@@ -109,9 +118,9 @@ let wrapper = (async()=>{
 
                 // upload
                 case 'u': {
-                    let github_res;
+                    let res;
                     try {
-                        github_res = await octokit.request(`PATCH /gists/{gist_id}`, {
+                        res = await octokit.request(`PATCH /gists/{gist_id}`, {
                             gist_id: options.gist_id,
                             files: {
                                 'alias.js': {
@@ -119,15 +128,23 @@ let wrapper = (async()=>{
                                 }
                             }
                         });
-                    } catch (e) {
-                        console.error(e);
+                    } catch (HttpErr) {
+                        console.error(HttpErr);
+                        console.log(`\nSTATUS CODE: ${HttpErr.status}`);
+                        console.log(`Github ratelimit: ${HttpErr.headers['x-ratelimit-remaining']} / ${HttpErr.headers["x-ratelimit-limit"]}`)
+                        console.log(`(resets ${sb.Utils.timeDelta(new sb.Date(Number(HttpErr.headers['x-ratelimit-reset']) * 1000))})`)
+
+                        if (HttpErr.status === 404)
+                            console.log("\nMost likely causes:\n  1. Secret gist & no auth.\n  2. Incorrect Gist ID");
+                        else if (HttpErr.status === 403)
+                            console.log('\nMost likely causes:\n  1. No auth.\n  2. Incorrect Gist ID')
                         break;
                     }
 
-                    console.log(`STATUS CODE: ${github_res.status}`);
+                    console.log(`STATUS CODE: ${res.status}`);
 
-                    console.log(`Github ratelimit: ${github_res.headers['x-ratelimit-remaining']} / ${github_res.headers["x-ratelimit-limit"]}`)
-                    console.log(`(resets ${sb.Utils.timeDelta(new sb.Date(Number(github_res.headers['x-ratelimit-reset']) * 1000))})`)
+                    console.log(`Github ratelimit: ${res.headers['x-ratelimit-remaining']} / ${res.headers["x-ratelimit-limit"]}`)
+                    console.log(`(resets ${sb.Utils.timeDelta(new sb.Date(Number(res.headers['x-ratelimit-reset']) * 1000))})`)
                     break;
                 }
 
