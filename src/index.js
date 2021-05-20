@@ -80,9 +80,8 @@ let wrapper = (async()=>{
             '[U]pload script',
             'script [S]tats',
             '[P]rint script',
-            '[Q]uit',
-            '[O]ptions',
-            '[H]elp'
+            '[H]elp',
+            '[Q]uit'
         ]
 
     // Main loop
@@ -171,45 +170,11 @@ let wrapper = (async()=>{
                     break;
                 }
 
-                // options
-                case 'o': {
-
-                    let tmp = Object.assign({}, options);
-                    console.group("Current options");
-                    console.log(options);
-                    console.groupEnd("Current options");
-
-                    let key = prompt(`  Key to change/make: `);
-                    if (key === null) break;
-                    let val = prompt(`  String value to write in '${key}': `);
-                    if (val === null) break;
-                    tmp[key] = val;
-                    console.group(`New options`);
-                    console.log(options);
-                    console.groupEnd("New options")
-                    let save;
-                    do {
-                        save = prompt(`  Save? [Y/n]: `, 'y');
-                        if (save === null) {
-                            save = 'n';
-                            break;
-                        }
-                    } while (!['y', 'n'].includes(save.toLowerCase()));
-                    if (save === 'y') {
-                        options = tmp
-                        await fs.writeFile(options_path, JSON.stringify(options, null, 4));
-                        console.log(`Saved to '${path.resolve(options_path)}'.`);
-                    } else {
-                        console.log('Change aborted!')
-                    }
-
-                    break;
-                }
-
                 // help
                 case 'h': {
                     while (true) {
-                        let res = prompt('')
+                        let res = prompt('');
+                        if (res === null) break;
                     };
                 }
             }
