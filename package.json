@@ -1,11 +1,12 @@
 {
   "name": "sb-apm",
   "version": "0.0.3",
-  "description": "Alias package manager for supibot",
+  "description": "Alias generator for supibot.",
   "main": "./src/index.js",
   "repository": "https://github.com/NotNotQuinn/sb-apm",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no automatic test specified\" && exit 1",
+    "test:manual": "node . ./test/options.json"
   },
   "keywords": [
     "twitch"
