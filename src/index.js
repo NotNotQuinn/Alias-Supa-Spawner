@@ -174,7 +174,7 @@ let wrapper = (async()=>{
                             : "The options file should contain at least ONE thing.\n"
                             + "That thing is, the 'inFile'.\n"
                             + "\n"
-                            + "RECOGNISED KEYS:\n"
+                            + "RECOGNIZED KEYS:\n"
                             + "\n"
                             + "  REQ: inFile: A path to the input javascript file.\n"
                             + "\n"
@@ -196,7 +196,7 @@ let wrapper = (async()=>{
                             + "       javascript to.\n"
                             + "         This file will be loaded using `require`.\n"
                             + "         Simply write\n"
-                            + "           'process.env.GITHUB_TOKEN = `your_gh_token`;'\n"
+                            + "           'process.env.GITHUB_TOKEN = `your_token`;'\n"
                             + "\n"
                             + "  OPT: useFunctionParam: Use `function:\"code\"\n"
                             + "       syntax?`\n"
@@ -253,6 +253,7 @@ let wrapper = (async()=>{
                             }
                             console.groupEnd("Topics:");
                         }
+                        console.log(); // empty line
                         res = prompt("  Pick a topic: ");
                         if (res === null) {
                             quit_help = true;
