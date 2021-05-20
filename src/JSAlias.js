@@ -158,7 +158,7 @@ class JSAlias {
                 Discord_ID: null,
                 Twitch_ID: 123456789,
                 Name: "fake-user",
-                Started_Using: new sb.Date("2021-03-30T05:37:20.006Z"),
+                Started_Using: new sb.Date("2021-05-19T00:00:00.000Z"),
                 Data: {}
             },
             {

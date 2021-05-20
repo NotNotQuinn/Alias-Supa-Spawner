@@ -83,7 +83,6 @@ let command = commands.find(i => i.Names.includes(args[0]));
 
 if (!command) return `${error_msg} Try: ${ commands.map(cmd => cmd.Names[0]).join(", ") }; OR: "$$${invocation} help (sub-command)" for more information.`;
 
-if ((Math.floor(Math.random() * 5)) > 5) return 'loool trolled'
 return command.Exec({
     Invocation: args[0],
     Args: args.slice(1)
