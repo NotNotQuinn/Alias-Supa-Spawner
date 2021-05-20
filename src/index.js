@@ -3,13 +3,12 @@ let wrapper = (async()=>{
         const options_path = process.argv[2];
         if (!(process.argv.length > 2)) {
             console.error("\nPlease provide your conifg file as the first argument.");
-            console.log(process.argv);
             process.exit(1);
         }
         let options;
         const fs = require("fs").promises;
         try {
-            options = JSON.parse(await fs.readFile(options_path))
+            options = JSON.parse((await fs.readFile(options_path)).toString())
         } catch (err) {
             console.error("\nInvalid file provided. - Error while loading.");
             console.error(err);
@@ -77,8 +76,8 @@ let wrapper = (async()=>{
         /** List of sub-commands for the loop. */
         const sub_commands = [
             '[T]est loop',
-            '[U]pload script',
-            'script [S]tats',
+            '[U]pload',
+            '[S]tats',
             '[P]rint script',
             '[H]elp',
             '[Q]uit'
