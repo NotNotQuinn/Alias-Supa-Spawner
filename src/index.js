@@ -164,18 +164,119 @@ let wrapper = (async()=>{
                     break;
                 }
 
+                // help
+                case 'h': {
+                    const help_topics = {
+                        'Basic Usage\tHow to use this cli, and each part of it.'
+                            : "This is the help description for cli stuff.\n"
+                            + " - Last update 19/05/21 (D/M/Y)\n",
+                        'Config file\tJSON key/value descriptions and explanations.'
+                            : "The options file should contain at least ONE thing.\n"
+                            + "That thing is, the 'inFile'.\n"
+                            + "\n"
+                            + "RECOGNISED KEYS:\n"
+                            + "\n"
+                            + "  REQ: inFile: A path to the input javascript file.\n"
+                            + "\n"
+                            + "  OPT: outFile: A path to a file to save the minified\n"
+                            + "       javascript to.\n"
+                            + "\n"
+                            + "  OPT: wrapFunction: The type of function to use for\n"
+                            + "       the `ASS_Entry` wrapping function.\n"
+                            + "         Can either be 'arrow' or 'function-keyword'.\n"
+                            + "         DEFAULT 'function-keyword'.\n"
+                            + "\n"
+                            + "  OPT: gist_id: The ID of a gist to _EDIT_ the to get\n"
+                            + "       the alias github.\n"
+                            + "         Requires 'authFilePath' to be set to be able\n"
+                            + "         to work.\n"
+                            + "         NOTE: Will not create a new gist.\n"
+                            + "\n"
+                            + "  OPT: authFilePath: A path to save the minified\n"
+                            + "       javascript to.\n"
+                            + "         This file will be loaded using `require`.\n"
+                            + "         Simply write\n"
+                            + "           'process.env.GITHUB_TOKEN = `your_gh_token`;'\n"
+                            + "\n"
+                            + "  OPT: useFunctionParam: Use `function:\"code\"\n"
+                            + "       syntax?`\n"
+                            + "         A boolean value.\n"
+                            + "\n"
+                            + "  NOTE: ALL paths in the config file are relative to its\n"
+                            + "  location in the filesystem.\n"
+                            + "\n"
+                            + " - Last update 19/05/21 (D/M/Y)\n",
+                        'JS Environment\tHow to format your input JS for best outcome.'
+                            : "When making your alias, keep in mind that it WILL\n"
+                            + "be wrapped in a function called `ASS_Entry` if it\n"
+                            + "is minified.\n"
+                            + "This means, for instance you can use top-level return.\n"
+                            + "\n"
+                            + "Things to keep in mind:\n"
+                            + "\n"
+                            + "  Most NodeJS globals are gone.\n"
+                            + "    This includes `process`.\n"
+                            + "\n"
+                            + "  You cannot use the following things:\n"
+                            + "    eval\n"
+                            + "    async/await\n"
+                            + "    foo.constructor.constructor.constructor()\n"
+                            + "    ... and most likely more\n"
+                            + "\n"
+                            + "  `args` global object.\n"
+                            + "    Is eaqual to `null`\n"
+                            + "    OR an array of arguments passed to dankdebug\n"
+                            + "      (only if function:\"code\" syntax is used)\n"
+                            + "\n"
+                            + "  `utils` global object.\n"
+                            + "    Has the following properties:\n"
+                            + "      'Date', 'capitalize', 'randArray', 'random',\n"
+                            + "      'randomString', 'removeAccents', 'timeDelta',\n"
+                            + "      'wrapString', 'zf'\n"
+                            + "\n"
+                            + "  NOTE: If you would like to know more about the vm context:\n"
+                            + "        https://www.npmjs.com/package/vm2\n"
+                            + "\n"
+                            + " - Last update 19/05/21 (D/M/Y)\n"
+                    }
+                    const entries = Object.entries(help_topics);
+                    let res;
+                    let quit_help = false;
+                    for (let i = 0; true; i++) {
+                        if (i !== 0) console.log("Invalid response!")
+                        if (i % 4 === 0) {
+                            console.group("Topics:");
+                            for (let i = 0; i < entries.length; i++) {
+                                const [topic] = entries[i];
+                                let thing = topic.split('\t', 2);
+                                console.log(`[${i + 1}] ${thing[0]}:\n      ${thing[1]}`);
+                            }
+                            console.groupEnd("Topics:");
+                        }
+                        res = prompt("  Pick a topic: ");
+                        if (res === null) {
+                            quit_help = true;
+                            break;
+                        };
+                        if ((Number(res)-1) < 0) continue;
+                        if ((Number(res)-1) >= entries.length) continue;
+                        if (!isNaN(Number(res || undefined))) break;
+                    }
+                    if (quit_help) break;
+                    res = Number(res);
+                    let index = res - 1;
+                    let width = 50;
+                    console.group('='.repeat(width));
+                    console.log(`\n${entries[index][1]}`)
+                    console.groupEnd('='.repeat(width));
+                    console.log('='.repeat(width))
+                    break;
+                }
+
                 // quit
                 case 'q': {
                     quit = true;
                     break;
-                }
-
-                // help
-                case 'h': {
-                    while (true) {
-                        let res = prompt('');
-                        if (res === null) break;
-                    };
                 }
             }
             // Lower indent for subcommand
