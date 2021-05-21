@@ -11,6 +11,9 @@
   "keywords": [
     "twitch"
   ],
+  "bin": {
+    "ass": "./src/index.js"
+  },
   "author": "Quinn T",
   "license": "MIT",
   "dependencies": {
