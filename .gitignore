@@ -1,8 +1,5 @@
 # node
 node_modules
 
-# api keys
-auth.js
-
-# supibot database connection (for supi-core)
-supibot-db-access.js
+# github api key
+test/auth.js
