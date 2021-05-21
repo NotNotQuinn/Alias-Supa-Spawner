@@ -14,7 +14,7 @@ declare const eval: (x: string) => never;
 /**
  * Utility methods allowed to the script.
  */
-declare const util: {
+declare const utils: {
     // classes
     Date: typeof import('supi-core/objects/date');
 
@@ -34,3 +34,5 @@ declare const util: {
      */
     getEmote: (arr: string[], fallback: string) => string;
 };
+
+// because this file has no exports or imports, it is global within the folder.
