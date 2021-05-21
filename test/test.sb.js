@@ -1,8 +1,8 @@
 "use strict";
 
-const invocation = "test";
+const invocation = "$";
 
-if (!args) return `Please use this code with the 'function:"code"' syntax.`;
+if (!args) return `abb say Please use this code with the 'function:"code"' syntax.`;
 
 /**
  * @typedef Context
@@ -13,7 +13,7 @@ if (!args) return `Please use this code with the 'function:"code"' syntax.`;
 /**
  * @typedef HelpTexts
  * @property {string} basic Basic explanation of the command.
- * @property {string} usage An example usage of the command.
+ * @property {string} [usage] An example usage of the command.
  */
 
 /**
@@ -31,7 +31,7 @@ if (!args) return `Please use this code with the 'function:"code"' syntax.`;
  * @typedef SubCommand
  * @property {string[]} Names List of names the sub-command has.
  * @property {SubCommandExec} Exec Execution of the command.
- * @property {HelpTexts} helpTexts Help messages for the sub-command.
+ * @property {HelpTexts} [helpTexts] Help messages for the sub-command.
  */
 
 /**
@@ -39,36 +39,48 @@ if (!args) return `Please use this code with the 'function:"code"' syntax.`;
  */
 const commands = [
     {
-        Names: ["help"],
-        /**
-         * @param {Context} context String arguments.
-         * @returns {string} Responce
-         */
+        Names: ['install'],
+        Exec: (context) => {
+
+        }
+    },
+    {
+        Names: ["commands", "help"],
         Exec: (context) => {
             const { Invocation, Args: [ identifier ] } = context;
-            if (identifier === void 0)
+            if (identifier === void 0 || Invocation === "commands")
                 return {
                     reply: `Availible sub-commands: ${ commands.map(cmd => cmd.Names[0]).join(", ") }; Also: try $$${invocation} help help`
                 }
-
             let command = commands.find(i => i.Names.includes(identifier));
-
-            if (command) {
-                let aliases = command.Names.slice(1).join(", ");
-                return `Help for "${ command.Names[0] }"${ aliases !== "" ? ` (${aliases})` : "" }: `
-                  + `${command.helpTexts.basic}; Usage: ${command.helpTexts.useage}`
+            try {
+                if (command) {
+                    let aliases = command.Names.slice(1).join(", ");
+                    return {
+                        reply: `Help for "${ command.Names[0] }"${ aliases !== "" ? ` (${aliases})` : "" }: `
+                             + `${command.helpTexts.basic}; Usage: ${command.helpTexts.useage ?? '(no example)'}`
+                    }
+                }
+            } catch {
+                return {
+                    reply: `No help availible for subcommand "${identifier}".`
+                }
             }
-            return `Command not found "${identifier}". Availible sub-commands: ${ commands.map(cmd => cmd.Names[0]).join(", ") }`
+            return {
+                reply: `Command not found "${identifier}". Availible sub-commands: ${ commands.map(cmd => cmd.Names[0]).join(", ") }`
+            }
         },
         helpTexts: {
             basic: "Shows help for commands, or a list of sub-commands",
-            useage: `$$${invocation} help (sub-command)`
+            useage: `$$${invocation} help (sub-command) OR $$${invocation} commands`
         }
     },
     {
         Names: ["ping"],
         Exec: (context) => {
-            return `Pong! This command is not a stand-alone bot but whatever.`
+            return {
+                reply: `Pong! This command is not a stand-alone bot but whatever.`
+            }
         },
         helpTexts: {
             basic: "A test command that responds with the same text.",
@@ -76,14 +88,31 @@ const commands = [
         }
     }
 ]
+
+let index = args.indexOf('force:true');
+if (index > -1) {
+    args.splice(index, 1);
+}
 let error_msg = `Sub-command "${args[0]}" not found.`
 if (args[0] === void 0) error_msg = `No sub-command provided.`
 
 let command = commands.find(i => i.Names.includes(args[0]));
 
-if (!command) return `${error_msg} Try: ${ commands.map(cmd => cmd.Names[0]).join(", ") }; OR: "$$${invocation} help (sub-command)" for more information.`;
+if (!command) return `abb say ${error_msg} Try: ${ commands.map(cmd => cmd.Names[0]).join(", ") }; OR: "$$${invocation} help (sub-command)" for more information.`;
 
-return command.Exec({
-    Invocation: args[0],
-    Args: args.slice(1)
-});
+/** @type {SubCommandReturnType} */
+let responce;
+try {
+    responce = command.Exec({
+        Invocation: args[0],
+        Args: args.slice(1)
+    });
+} catch (err) {
+    return `abb ac 0 a errorMessage:"This subcommand resulted in an error! (${err.constructor.name})"`;
+}
+
+if (responce?.cmd && responce?.reply) return `${responce.cmd} | abb say | null | abb say ${responce.reply}`;
+else if (responce?.cmd && !responce?.reply) return `${responce.cmd}`;
+else if (!responce?.cmd && responce?.reply) return `abb say ${responce.reply}`;
+// default to just returning the raw output
+else return `abb say ${responce}`;
