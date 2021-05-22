@@ -6,7 +6,8 @@
   "repository": "https://github.com/NotNotQuinn/sb-apm",
   "scripts": {
     "test": "echo \"Error: no automatic test specified\" && exit 1",
-    "test:manual": "node . ./test/options.json"
+    "test:1": "node . ./test/test1-config.json",
+    "test:2": "node . ./test/test2-config.json"
   },
   "keywords": [
     "twitch"
