@@ -10,7 +10,7 @@ let wrapper = (async()=>{
         try {
             options = JSON.parse((await fs.readFile(options_path)).toString())
         } catch (err) {
-            console.error("\nInvalid file provided. - Error while loading.");
+            console.error("\nInvalid config file provided. - Error while loading.");
             console.error(err);
             process.exit(1);
         }
@@ -33,6 +33,7 @@ let wrapper = (async()=>{
 
         /** Solves a relative path, from the options file. */
         const options_rel_path = (relative) => {
+            if (relative == null) return null;
             let p = path.resolve(path.parse(options_path).dir, relative);
             console.log("PATH", p);
             return p;
@@ -67,9 +68,9 @@ let wrapper = (async()=>{
         });
 
         /** Loads JS file, compresses, and writes to outfile. */
-        async function updateAlias () {
+        async function updateAlias (uglifyOptions = {}) {
             await alias.load();
-            await alias.uglify("/* Alias by QuinnDT, source: https://github.com/NotNotQuinn/Alias-Supa-Spawner/blob/main/test/test.sb.js */");
+            await alias.uglify(options.preamble ?? undefined, uglifyOptions || {});
             await alias.write();
         }
 
@@ -105,7 +106,7 @@ let wrapper = (async()=>{
                         if (message === null) break;
                         let args = message.split(" ");
 
-                        await updateAlias();
+                        await updateAlias({ mangle: false });
 
                         responce = await alias.test(args);
                         if (responce.success === void 0) responce.success = true;
@@ -117,6 +118,10 @@ let wrapper = (async()=>{
 
                 // upload
                 case 'u': {
+                    updateAlias({
+                        mangle: true,
+                        compress: true
+                    })
                     let res;
                     try {
                         res = await octokit.request(`PATCH /gists/{gist_id}`, {
@@ -141,9 +146,9 @@ let wrapper = (async()=>{
                     }
 
                     console.log(`STATUS CODE: ${res.status}`);
-
                     console.log(`Github ratelimit: ${res.headers['x-ratelimit-remaining']} / ${res.headers["x-ratelimit-limit"]}`)
                     console.log(`(resets ${sb.Utils.timeDelta(new sb.Date(Number(res.headers['x-ratelimit-reset']) * 1000))})`)
+                    console.log(`\nLINK: https://gist.github.com/${options.gist_id}/`)
                     break;
                 }
 
@@ -157,7 +162,7 @@ let wrapper = (async()=>{
                 // stats
                 case 's': {
                     let og_len = alias.rawCodeBuffer.toString().length;
-                    let min_len = alias.code.length;
+                    let min_len = alias.code.split(/\r/).filter(i=>!i.startsWith("/*")).join('\n').length;
                     console.log(`OG script length: ${og_len}`);
                     console.log(`Minified script length: ${min_len}`);
                     console.log(`Size diff: ${og_len - min_len};  % diff: ${100 * ((og_len - min_len) / og_len)}`)
@@ -201,6 +206,9 @@ let wrapper = (async()=>{
                             + "  OPT: useFunctionParam: Use `function:\"code\"\n"
                             + "       syntax?`\n"
                             + "         A boolean value.\n"
+                            + "\n"
+                            + "  OPT: preamble: A line of text that will be inserted\n"
+                            + "         before your code in the outfile.\n"
                             + "\n"
                             + "  NOTE: ALL paths in the config file are relative to its\n"
                             + "  location in the filesystem.\n"
