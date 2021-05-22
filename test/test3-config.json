@@ -1,0 +1,7 @@
+{
+    "inFile": "./test3.sb.js",
+    "outFile": "./test3.sb.min.js",
+    "preamble": "/* Alias by QuinnDT, source: https://github.com/NotNotQuinn/Alias-Supa-Spawner/blob/main/test/test3.sb.js */",
+    "gist_id": "0c13146e59b0efba680244ac1e28fdae",
+    "authFilePath": "../test/auth.js"
+}
