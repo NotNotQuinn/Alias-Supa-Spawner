@@ -1,20 +1,20 @@
 /** Arguments passed to script if `function:"code"` is used. */
-declare const args: string[] | null;
+declare var args: string[] | null;
 /** The person who executes the command's username. */
-declare const executor: string;
+declare var executor: string;
 /** The channel the command is executed in. */
-declare const channel: string;
+declare var channel: string;
 /** The name of the platform the command is executed in. */
-declare const platform: string;
+declare var platform: string;
 /** Console is undefined in dankdebug. */
-declare const console: undefined;
+declare var console: undefined;
 /** Eval will throw an error in dankdebug.  */
-declare const eval: (x: string) => never;
+declare var eval: (x: string) => never;
 
 /**
  * Utility methods allowed to the script.
  */
-declare const utils: {
+declare var utils: {
     // classes
     Date: typeof import('supi-core/objects/date');
 
