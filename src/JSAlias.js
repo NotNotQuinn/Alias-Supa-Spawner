@@ -2,8 +2,6 @@ const fs = require("fs").promises;
 const UglifyJS = require("uglify-js");
 const dankdebug_Spec = require("supibot-package-manager/commands/dankdebug");
 
-require("../supibot-db-access")
-
 let SBLoadPromise = require("./load_sb")
 SBLoadPromise.then(() => JSAlias.loadedSB = true)
 
@@ -128,13 +126,15 @@ class JSAlias {
                 quote_style: 1,
                 preamble: preamble ?? undefined
             },
-            mangle: true,
-            compress: true,
+            mangle: false,
+            compress: false,
             keep_fnames: true
         }, options));
         if( responce.error ) console.log(responce.error);
         let code = responce.code.replace(/"/g, '\\u{22}');
-        this.uglyCode = `/*! Created using 'Alias Supa Spawner' (https://github.com/NotNotQuinn/Alias-Supa-Spawner), Powered by UglifyJS */\n` + code;
+        this.uglyCode = 
+            `/*! Created using 'Alias Supa Spawner' (https://github.com/NotNotQuinn/Alias-Supa-Spawner), Powered by UglifyJS */\n`
+            + code;
     }
 
     /**
@@ -153,34 +153,46 @@ class JSAlias {
 
         console.log(realArgs)
 
-        let r = await sb.Command.checkAndExecute(dankdebug, realArgs, null, {
-                ID: 1,
-                Discord_ID: null,
-                Twitch_ID: 123456789,
-                Name: "fake-user",
-                Started_Using: new sb.Date("2021-05-19T00:00:00.000Z"),
-                Data: {}
-            },
+        let user = {
+            ID: 1,
+            Discord_ID: null,
+            Twitch_ID: 123456789,
+            Name: "fake-user",
+            Started_Using: new sb.Date("2021-05-19T00:00:00.000Z"),
+            Data: {}
+        }
+
+        let platform = {
+            Name: "fake-chat",
+            ID: 13,
+            Self_Name: "fake-bot"
+        }
+
+        let channel = null;
+
+        let r = await sb.Command.checkAndExecute(dankdebug, realArgs, channel, user,
             {
                 context: sb.Command.createFakeContext(dankdebug, {
                     params: {
                         function: this.useFunctionParam
                             ? this.code
                             : undefined
-                    }
+                    },
+                    platform,
+                    user,
+                    channel
                 }),
-                platform: {
-                    Name: "fake-chat",
-                    ID: 13,
-                    Self_Name: "fake-bot"
-                }
+                platform,
+                user,
+                channel
             }
         );
         return r;
     }
 
     async write () {
-        await fs.writeFile(this.outFile ?? (()=>{ throw new Error("No outfile found.") })(), this.code)
+        if (this.outFile == null) return;
+        await fs.writeFile(this.outFile, this.code)
     }
 }
 module.exports = JSAlias;
