@@ -76,26 +76,62 @@ const success = (msg) => `abb say ${msg}`;
  * @param {string[]} args
  */
 function getExpression (args) {
-    let index = args.findIndex(i => i.startsWith('expression:'));
-    if (index === -1) return { newArgs: args }
-    let expressionString = args.slice(index).join(' ');
-    // anything before the index will be kept
-    let newArgs = args.slice(index);
+    let output;
+    const paramNames = [{name:"expression", type:"string"}].map(i => i.name);
 
-    let stringSplit = expressionString.split(':');
-    stringSplit.shift();
-    let firstExpression =  stringSplit.join(':');
+    let argsString = args.join(" ");
+    const quotesRegex = new RegExp(`(?<name>${paramNames.join("|")}):(?<!\\\\)"(?<value>.*?)(?<!\\\\)"`, "g");
+    const quoteMatches = [...argsString.matchAll(quotesRegex)];
 
-    let expression;
-    if (firstExpression.startsWith('"')) {
-        expression = firstExpression.match(new RegExp('"(.*?)"'))?.[1];
-        // edit the expression out of the args
-        newArgs.concat(...[])
-    } else {
-        expression = firstExpression.split(' ')[0];
-        newArgs.concat(args.slice(index + 1));
+    for (const match of quoteMatches.reverse()) {
+        argsString = argsString.slice(0, match.index) + argsString.slice(match.index + match[0].length + 1);
+
+        const { name = null, value = null } = match.groups;
+        const { type } = [{name:"expression", type:"string"}].find(i => i.name === name);
+
+        if (name !== null && value !== null) {
+            const cleanValue = value.replace(/^"|"$/g, "").replace(/\\"/g, "\"");
+            const parsedValue = cleanValue
+            if (parsedValue === null) {
+                sb.CooldownManager.unsetPending(userData.ID);
+                return {
+                    success: false,
+                    reply: `Cannot parse parameter "${name}"!`
+                };
+            }
+
+            output = parsedValue;
+        }
     }
-    return { expression, newArgs};
+
+    const remainingArgs = argsString.split(" ");
+    const paramRegex = new RegExp(`^(?<name>${paramNames.join("|")}):(?<value>.*)$`);
+    for (let i = remainingArgs.length - 1; i >= 0; i--) {
+        if (!paramRegex.test(remainingArgs[i])) {
+            continue;
+        }
+
+        const { name = null, value = null } = remainingArgs[i].match(paramRegex).groups;
+        const { type } = [{name:"expression", type:"string"}].find(i => i.name === name);
+
+        if (name !== null && value !== null) {
+            const parsedValue = String(value);
+            if (parsedValue === null) {
+                sb.CooldownManager.unsetPending(userData.ID);
+                return {
+                    success: false,
+                    reply: `Cannot parse parameter "${name}"!`
+                };
+            }
+
+            output = parsedValue;
+            remainingArgs.splice(i, 1);
+        }
+    }
+
+    args = remainingArgs.filter(Boolean);
+
+    return { expression: output, newArgs: args };
 }
 console.log('old args', args)
 const { expression, newArgs } = getExpression(args);
