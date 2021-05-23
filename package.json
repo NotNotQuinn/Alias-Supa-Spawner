@@ -6,15 +6,18 @@
   "repository": "https://github.com/NotNotQuinn/sb-apm",
   "scripts": {
     "test": "echo \"Error: no automatic test specified\" && exit 1",
-    "test:1": "node . ./test/test1-config.json",
-    "test:2": "node . ./test/test2-config.json",
-    "test:3": "node . ./test/test3-config.json"
+    "test:1": "node --harmony-nullish --harmony-optional-chaining . ./test/test1-config.json",
+    "test:2": "node --harmony-nullish --harmony-optional-chaining . ./test/test2-config.json",
+    "test:3": "node --harmony-nullish --harmony-optional-chaining . ./test/test3-config.json"
+  },
+  "engines": {
+    "node": "13.14"
   },
   "keywords": [
     "twitch"
   ],
   "bin": {
-    "ass": "./src/index.js"
+    "alias-tester": "./src/cli"
   },
   "author": "Quinn T",
   "license": "MIT",
