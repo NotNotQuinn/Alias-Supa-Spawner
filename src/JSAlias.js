@@ -127,7 +127,10 @@ class JSAlias {
                 preamble: preamble ?? undefined
             },
             mangle: false,
-            compress: true,
+            compress: {
+                drop_console: true,
+                drop_debugger: true
+            },
             keep_fnames: true
         }, options));
         if( responce.error ) console.log(responce.error);
