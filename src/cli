@@ -1,2 +1,2 @@
-#!/usr/bin/env node --harmony-nullish --harmony-optional-chaining
+#!node --harmony-nullish --harmony-optional-chaining
 require('.')
