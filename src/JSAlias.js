@@ -127,7 +127,7 @@ class JSAlias {
                 preamble: preamble ?? undefined
             },
             mangle: false,
-            compress: false,
+            compress: true,
             keep_fnames: true
         }, options));
         if( responce.error ) console.log(responce.error);

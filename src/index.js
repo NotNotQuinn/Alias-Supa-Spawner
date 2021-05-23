@@ -162,7 +162,7 @@ let wrapper = (async()=>{
                 // stats
                 case 's': {
                     let og_len = alias.rawCodeBuffer.toString().length;
-                    let min_len = alias.code.split(/\r/).filter(i=>!i.startsWith("/*")).join('\n').length;
+                    let min_len = alias.code.split(/\r?\n/).filter(i=>!i.startsWith("/*")).join('\n').length;
                     console.log(`OG script length: ${og_len}`);
                     console.log(`Minified script length: ${min_len}`);
                     console.log(`Size diff: ${og_len - min_len};  % diff: ${100 * ((og_len - min_len) / og_len)}`)
