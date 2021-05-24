@@ -1,17 +1,21 @@
 let wrapper = (async()=>{
     // Handle getting options file
-        const options_path = process.argv[2];
-        if (!(process.argv.length > 2)) {
-            console.error("\nPlease provide your conifg file as the first argument.");
-            process.exit(1);
-        }
+        let options_path = process.argv[2];
         let options;
+        const path = require("path");
         const fs = require("fs").promises;
+        if (!(process.argv.length > 2)) {
+            // look for config file.
+            console.warn('Config file not provided...');
+            options_path = path.resolve('.alias-tester-config.json');
+
+            console.log(`Proceeding to check for '${options_path}'.`);
+        }
         try {
             options = JSON.parse((await fs.readFile(options_path)).toString())
         } catch (err) {
-            console.error("\nInvalid config file provided. - Error while loading.");
-            console.error(err);
+            console.error('\n', err);
+            console.error(`\nInvalid config file at '${options_path}'. - Error above.`);
             process.exit(1);
         }
 
@@ -20,7 +24,6 @@ let wrapper = (async()=>{
         await JSAlias.SBLoadPromise;
         const Prompt = require("prompt-sync");
         const { Octokit } = require("@octokit/core");
-        const path = require("path");
 
     // Load APIs & define util functions.
         /**
